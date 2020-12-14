@@ -15,12 +15,8 @@ bool gameOver(Game game) {
     return game.seeds_total < 8;
 }
 
-bool isOpponentHungry(bool merged, Game game) {
-    int cpt = 24;
-    if (merged == true) {
-        cpt = 12;
-    }
-    for (int i = 0; i < cpt; i++) { 
+bool isOpponentHungry(bool merged, Game game, int nb_cells) {
+    for (int i = 0; i < nb_cells; i++) { 
         // Quand computer play est true (= 1), donc l'ordinateur joue, on va vérifier les indices impairs qui correspondent aux cases paires du joueur
         if (i % 2 == game.computer_play) {
             if (game.board[i] != 0) {
@@ -95,12 +91,14 @@ int main() {
     // Position initiale du jeu
     Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-                   96, false, 0, 0};
+                   96, true, 0, 0};
 
     //Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
-    //Game game = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
-    //               0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
-    //              96, false, 0, 0 };
+    /*
+    Game game = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
+                   0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
+                   96, false, 0, 0 };
+    */
 
     Game* ptr = &game;
 
@@ -152,8 +150,8 @@ int main() {
         takeSeeds(ptr, cell, seeds, nb_cells);
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
-        if (isOpponentHungry(merged, game)) {
-            //on ajoute les graines sur le plateau au total du joueur actuel
+        if (isOpponentHungry(merged, game, nb_cells)) {
+            // On ajoute les graines sur le plateau au total du joueur actuel
             if (game.computer_play) {
                 ptr->seeds_computer += ptr->seeds_total;
                 ptr->seeds_total -= ptr->seeds_total;
