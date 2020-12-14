@@ -47,7 +47,7 @@ int plantSeeds(Game * game, int cell, int nb_cells) {
         if ((cell + i) % nb_cells != start_cell) {
             game->board[(cell + i) % nb_cells] += 1;
         }
-        i--;
+        else seeds++;
     }
     return seeds;
 }
@@ -92,7 +92,7 @@ int main() {
     // Position initiale du jeu
     Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-                   96, true, 0, 0};
+                   96, false, 0, 0};
 
     //Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
     /*
@@ -129,7 +129,7 @@ int main() {
 
         if (game.computer_play) {
             // Joue uniquement les cases impaires
-            do cell = rand() % computer_rand * 2;
+            do cell = rand() % computer_rand * 2 + 1;
             while (game.board[cell] == 0);
             printf("Computer plays cell %d\n", cell + 1);
         }
@@ -141,7 +141,7 @@ int main() {
                 scanf("%d", &cell);
                 cell--;
             }
-            while (game.board[cell] == 0 || (cell % 2 == 0) || cell > nb_cells);
+            while (game.board[cell] == 0 || (cell % 2 != 0) || cell > nb_cells);
         }
 
         // On egrène on on récupère le nombre de graines à la case choisie
