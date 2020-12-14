@@ -47,6 +47,7 @@ int plantSeeds(Game * game, int cell, int nb_cells) {
         if ((cell + i) % nb_cells != start_cell) {
             game->board[(cell + i) % nb_cells] += 1;
         }
+        i--;
     }
     return seeds;
 }
