@@ -15,6 +15,22 @@ bool gameOver(Game game) {
     return game.seeds_total < 8;
 }
 
+bool isOpponentHungry(bool merged, Game game) {
+    int cpt = 24;
+    if (merged == true) {
+        cpt = 12;
+    }
+    for (int i = 0; i < cpt; i++) { 
+        // Quand computer play est true (= 1), donc l'ordinateur joue, on va vérifier les indices impairs qui correspondent aux cases paires du joueur
+        if (i % 2 == game.computer_play) {
+            if (game.board[i] != 0) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void merge(Game * game) {
     int sum_seeds = 0;
     int merged_cell = 0;
@@ -65,7 +81,7 @@ void showBoard(Game game, int turn, int nb_cells) {
     printf("### TURN %d ###\n", turn);
     for (int i = 0; i < nb_cells; i++) {
         printf("%d ", game.board[i]);
-        if (i == 11) {
+        if (i == (nb_cells/2 - 1)) {
             printf("\n");
         }
     }
@@ -80,6 +96,11 @@ int main() {
     Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
                    96, false, 0, 0};
+
+    //Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
+    //Game game = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
+    //               0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
+    //              96, false, 0, 0 };
 
     Game* ptr = &game;
 
@@ -97,7 +118,6 @@ int main() {
 
     // Boucle de jeu
     while (!gameOver(game)) {
-
         // S'il reste moins de 48 graines, on fusionne les cellules
         if (game.seeds_total < 48 && !merged) {
             merge(ptr);
@@ -131,11 +151,26 @@ int main() {
         // On regarde s'il y a une prise
         takeSeeds(ptr, cell, seeds, nb_cells);
 
+        // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
+        if (isOpponentHungry(merged, game)) {
+            //on ajoute les graines sur le plateau au total du joueur actuel
+            if (game.computer_play) {
+                ptr->seeds_computer += ptr->seeds_total;
+                ptr->seeds_total -= ptr->seeds_total;
+            }
+            else {
+                ptr->seeds_player += ptr->seeds_total;
+                ptr->seeds_total -= ptr->seeds_total;
+            }
+        }
+       
         turn++;
         showBoard(game, turn, nb_cells);
 
         game.computer_play = !game.computer_play;
     }
+    printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n" , ptr->seeds_computer, ptr->seeds_player);
+
 
     return 0;
 }
