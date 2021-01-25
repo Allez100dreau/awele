@@ -146,7 +146,7 @@ int main() {
             do {
                 scanf_s("%d", &cell);
                 cell--;
-            } while (game.board[cell] == 0 || (cell % 2 == 0) || cell > nb_cells || cell < 1); //mettre (cell % 2 != 0) pour jouer les impairs
+            } while (game.board[cell] == 0 || (cell % 2 == 0) || cell > nb_cells || cell < 1); // mettre (cell % 2 != 0) pour jouer les impairs
         }
 
         // On egrène on on récupère le nombre de graines à la case choisie
@@ -176,6 +176,7 @@ int main() {
     }
     printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
 
+    // Test
 
     return 0;
 }
