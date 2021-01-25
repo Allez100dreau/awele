@@ -15,10 +15,10 @@ bool gameOver(Game game) {
     return game.seeds_total < 8;
 }
 
-bool isOpponentHungry(bool merged, Game game, int nb_cells) {
-    for (int i = 0; i < nb_cells; i++) { 
-        // Quand computer play est true (= 1), donc l'ordinateur joue, on va vérifier les indices impairs qui correspondent aux cases paires du joueur
-        if (i % 2 == game.computer_play) {
+bool isOpponentHungry(bool merged, Game game, int nb_cells, bool typeOfPlayer) {
+    for (int i = 0; i < nb_cells; i++) {
+        // Quand typeOfPlayer est égal à 1, on joue les impairs, on va vérifier les indices impairs qui correspondent aux cases paires de l'adversaire
+        if (i % 2 == typeOfPlayer) {
             if (game.board[i] != 0) {
                 return false;
             }
@@ -27,7 +27,7 @@ bool isOpponentHungry(bool merged, Game game, int nb_cells) {
     return true;
 }
 
-void merge(Game * game) {
+void merge(Game* game) {
     int sum_seeds = 0;
     int merged_cell = 0;
     for (int i = 1; i < 24; i += 2) {
@@ -38,7 +38,7 @@ void merge(Game * game) {
     printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
 }
 
-int plantSeeds(Game * game, int cell, int nb_cells) {
+int plantSeeds(Game* game, int cell, int nb_cells) {
     int start_cell = cell;
     // Le nombre de graines présentes dans la case choisie
     int seeds = game->board[cell];
@@ -52,7 +52,7 @@ int plantSeeds(Game * game, int cell, int nb_cells) {
     return seeds;
 }
 
-void takeSeeds(Game * game, int cell, int seeds, int nb_cells) {
+void takeSeeds(Game* game, int cell, int seeds, int nb_cells) {
     // La cellule sur laquelle on atterrit
     int last_cell = (cell + seeds) % nb_cells;
     printf("We reach cell %d\n\n", last_cell + 1);
@@ -78,7 +78,7 @@ void showBoard(Game game, int turn, int nb_cells) {
     printf("### TURN %d ###\n", turn);
     for (int i = 0; i < nb_cells; i++) {
         printf("%d ", game.board[i]);
-        if (i == (nb_cells/2 - 1)) {
+        if (i == (nb_cells / 2 - 1)) {
             printf("\n");
         }
     }
@@ -90,9 +90,12 @@ int main() {
     srand(time(NULL));
 
     // Position initiale du jeu
-    Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+    // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
+    // Quand on est à false, l'ordi joue en 2nd et doit jouer pair
+
+    Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-                   96, false, 0, 0};
+                   96, false, 0, 0 };
 
     // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
     /*
@@ -112,6 +115,7 @@ int main() {
     int cell;
     int seeds;
     int computer_rand = 12;
+    int typeDeCase;
 
     showBoard(game, turn, nb_cells);
 
@@ -129,7 +133,8 @@ int main() {
 
         if (game.computer_play) {
             // Joue uniquement les cases impaires
-            do cell = rand() % computer_rand * 2 + 1;
+            typeDeCase = 1; //On joue impair(1) donc on défini ici le type de case qu'on joue
+            do cell = rand() % computer_rand * 2; //pour switch au pairs, rajouter + 1
             while (game.board[cell] == 0);
             printf("Computer plays cell %d\n", cell + 1);
         }
@@ -137,11 +142,11 @@ int main() {
         else {
             // Joue uniquement les cases paires
             printf("Choose an even cell : \n");
+            typeDeCase = 0; //On joue pair(0) donc on défini ici le type de case qu'on joue
             do {
-                scanf("%d", &cell);
+                scanf_s("%d", &cell);
                 cell--;
-            }
-            while (game.board[cell] == 0 || (cell % 2 != 0) || cell > nb_cells);
+            } while (game.board[cell] == 0 || (cell % 2 == 0) || cell > nb_cells || cell < 1); //mettre (cell % 2 != 0) pour jouer les impairs
         }
 
         // On egrène on on récupère le nombre de graines à la case choisie
@@ -151,7 +156,8 @@ int main() {
         takeSeeds(ptr, cell, seeds, nb_cells);
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
-        if (isOpponentHungry(merged, game, nb_cells)) {
+        // typeDeCase précise si le joueur actuel joue pair ou impair (pair = 0, impair = 1)
+        if (isOpponentHungry(merged, game, nb_cells,typeDeCase)) {
             // On ajoute les graines sur le plateau au total du joueur actuel
             if (game.computer_play) {
                 ptr->seeds_computer += ptr->seeds_total;
@@ -162,13 +168,13 @@ int main() {
                 ptr->seeds_total -= ptr->seeds_total;
             }
         }
-       
+
         turn++;
         showBoard(game, turn, nb_cells);
 
         game.computer_play = !game.computer_play;
     }
-    printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n" , ptr->seeds_computer, ptr->seeds_player);
+    printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
 
 
     return 0;
