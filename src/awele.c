@@ -94,7 +94,7 @@ int main() {
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
                    96, false, 0, 0};
 
-    //Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
+    // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
     /*
     Game game = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
                    0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
