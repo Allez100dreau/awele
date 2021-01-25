@@ -176,7 +176,7 @@ int main() {
     }
     printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
 
-    // Test
+    // Dernier essai 2
 
     return 0;
 }
