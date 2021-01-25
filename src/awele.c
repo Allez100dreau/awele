@@ -16,12 +16,10 @@ bool gameOver(Game game) {
 }
 
 bool isOpponentHungry(bool merged, Game game, int nb_cells, bool typeOfPlayer) {
-    for (int i = 0; i < nb_cells; i++) {
-        // Quand typeOfPlayer est égal à 1, on joue les impairs, on va vérifier les indices impairs qui correspondent aux cases paires de l'adversaire
-        if (i % 2 == typeOfPlayer) {
-            if (game.board[i] != 0) {
-                return false;
-            }
+    // Si le joueur aux cases impaires vient de jouer, on vérifie les cases paires (indices impairs), et vice versa
+    for (int i = typeOfPlayer; i < nb_cells; i+=2) {
+        if (game.board[i] != 0) {
+            return false;
         }
     }
     return true;
@@ -93,16 +91,19 @@ int main() {
     // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
     // Quand on est à false, l'ordi joue en 2nd et doit jouer pair
 
+    /*
     Game game = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
                    96, false, 0, 0 };
+    */
+    
 
     // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
-    /*
+    
     Game game = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
                    0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
                    96, false, 0, 0 };
-    */
+    
 
     Game* ptr = &game;
 
@@ -157,15 +158,15 @@ int main() {
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
         // typeDeCase précise si le joueur actuel joue pair ou impair (pair = 0, impair = 1)
-        if (isOpponentHungry(merged, game, nb_cells,typeDeCase)) {
+        if (isOpponentHungry(merged, game, nb_cells, typeDeCase)) {
             // On ajoute les graines sur le plateau au total du joueur actuel
             if (game.computer_play) {
                 ptr->seeds_computer += ptr->seeds_total;
-                ptr->seeds_total -= ptr->seeds_total;
+                ptr->seeds_total = 0;
             }
             else {
                 ptr->seeds_player += ptr->seeds_total;
-                ptr->seeds_total -= ptr->seeds_total;
+                ptr->seeds_total = 0;
             }
         }
 
@@ -175,8 +176,6 @@ int main() {
         game.computer_play = !game.computer_play;
     }
     printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
-
-    // Dernier essai 2
 
     return 0;
 }
