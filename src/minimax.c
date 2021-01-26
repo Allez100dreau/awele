@@ -1,7 +1,7 @@
 #include "position.h"
 #include "functions.h"
 
-int minimax(Position* position, int depth, bool maximizingPlayer) {
+int minimax(Position position, int depth, bool maximizingPlayer) {
 	if (depth == 0 || gameOver(position)) {
 		return evaluation(position)
 	}
