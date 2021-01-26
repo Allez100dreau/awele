@@ -1,5 +1,5 @@
 int minimax(Position* position, int depth, bool maximizingPlayer) {
-	if (depth == 0 || gameOver(*position)) {
+	if (depth == 0 || gameOver(position)) {
 		return evaluation(position)
 	}
 

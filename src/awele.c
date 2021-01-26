@@ -93,7 +93,7 @@ int main() {
                    0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
                    96, false, 0, 0 };
     
-
+    // On récupère un pointeur pour la position
     Position* ptr = &position;
 
     // À propos du jeu
