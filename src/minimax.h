@@ -1,0 +1,1 @@
+int minimax(Position position, int depth, bool maximizingPlayer);
