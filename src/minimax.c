@@ -4,7 +4,7 @@
 
 int minimax(Position position, int depth) {
 	if (depth == 0 || gameOver(position)) {
-		return evaluation(position)
+		return evaluation(position);
 	}
 
 	Position nextPosition;
@@ -30,7 +30,7 @@ int minimax(Position position, int depth) {
 				values[i] = -96;
 			}
 			else {
-				values[i] = 96
+				values[i] = 96;
 			}
 		}
 	}
@@ -48,13 +48,13 @@ int minimax(Position position, int depth) {
 		int minEval = 96;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
-			minEval = min(maxEval, values[i]);
+			minEval = min(minEval, values[i]);
 		}
 		return minEval;
 	}
 }
 
-int evaluation(Position* position) {
+int evaluation(Position position) {
 	return position.seeds_computer - position.seeds_player;
 }
 
