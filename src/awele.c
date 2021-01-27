@@ -25,16 +25,17 @@ int main() {
     // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
     // Quand on est à false, l'ordi joue en 2nd et doit jouer pair
     
+    /*
     Position position = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
                    24, 96, false, 0, 0, false };  
+    */
 
     // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
-    /*
+    
     Position position = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
                    0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
                    24, 96, false, 0, 0, false };
-    */
 
     // On récupère un pointeur pour la position
     Position* ptr = &position;
@@ -48,16 +49,14 @@ int main() {
     int computer_rand = 12;
     int typeDeCase;
 
-    showBoard(position, turn);
-
     // Boucle de jeu
     while (!gameOver(position)) {
+        showBoard(position, turn);
+
         // S'il reste moins de 48 graines, on fusionne les cellules
         if (position.seeds_total < 48 && !position.merged) {
             merge(ptr);
-            position.merged = true;
-
-            position.nb_cells = 12;
+            
             computer_rand = 6;
             showBoard(position, turn);
         }
@@ -87,24 +86,17 @@ int main() {
         takeSeeds(ptr, cell, seeds);
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
-        if (isOpponentHungry(position, typeDeCase)) {
+        if (isOpponentStarved(position, typeDeCase)) {
             // On ajoute les graines restantes au total du joueur qui vient de jouer le coup
-            if (position.computer_play) {
-                ptr->seeds_computer += ptr->seeds_total;
-                ptr->seeds_total = 0;
-            }
-            else {
-                ptr->seeds_player += ptr->seeds_total;
-                ptr->seeds_total = 0;
-            }
+            printf("Opponent is starved, taking all remaining seeds...\n");
+            takeAllSeeds(ptr);
         }
 
         turn++;
-        showBoard(position, turn);
 
         position.computer_play = !position.computer_play;
     }
-    printf("Position is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
+    printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
 
     return 0;
 }

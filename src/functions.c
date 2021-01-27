@@ -48,10 +48,13 @@ void merge(Position* position) {
         position->board[merged_cell] = sum_seeds;
         merged_cell++;
     }
+    position->merged = true;
+    position->nb_cells = 12;
+
     printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
 }
 
-bool isOpponentHungry(Position position, bool typeOfPlayer) {
+bool isOpponentStarved(Position position, bool typeOfPlayer) {
     // Si le joueur aux cases impaires vient de jouer, on vérifie les cases paires (indices impairs), et vice versa
     int nb_cells = position.nb_cells;
     for (int i = typeOfPlayer; i < nb_cells; i += 2) {
@@ -60,6 +63,17 @@ bool isOpponentHungry(Position position, bool typeOfPlayer) {
         }
     }
     return true;
+}
+
+void takeAllSeeds(Position* position) {
+    if (position->computer_play) {
+        position->seeds_computer += position->seeds_total;
+        position->seeds_total = 0;
+    }
+    else {
+        position->seeds_player += position->seeds_total;
+        position->seeds_total = 0;
+    }
 }
 
 bool gameOver(Position position) {
