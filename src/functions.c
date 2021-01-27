@@ -54,10 +54,10 @@ void merge(Position* position) {
     printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
 }
 
-bool isOpponentStarved(Position position, bool typeOfPlayer) {
+bool isOpponentStarved(Position position) {
     // Si le joueur aux cases impaires vient de jouer, on vérifie les cases paires (indices impairs), et vice versa
     int nb_cells = position.nb_cells;
-    for (int i = typeOfPlayer; i < nb_cells; i += 2) {
+    for (int i = position.cellType; i < nb_cells; i += 2) {
         if (position.board[i] != 0) {
             return false;
         }

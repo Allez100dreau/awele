@@ -37,7 +37,7 @@ Position playMove(Position position, int cell) {
     takeSeeds(&position, cell, seeds);
 
 	// On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
-	if (isOpponentStarved(position, typeDeCase)) {
+	if (isOpponentStarved(position)) {
 		// On ajoute les graines restantes au total du joueur qui vient de jouer le coup
 		takeAllSeeds(&position);
 	}

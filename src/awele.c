@@ -47,7 +47,6 @@ int main() {
     int cell;
     int seeds;
     int computer_rand = 12;
-    int typeDeCase;
 
     // Boucle de jeu
     while (!gameOver(position)) {
@@ -63,7 +62,7 @@ int main() {
 
         if (position.computer_play) {
             // Joue uniquement les cases impaires
-            typeDeCase = 1; // L'ordinateur joue les cases impaires
+            position.cellType = 1; // L'ordinateur joue les cases impaires
             do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);
             printf("Computer plays cell %d\n", cell + 1);
@@ -72,7 +71,7 @@ int main() {
         else {
             // Joue uniquement les cases paires
             printf("Choose an even cell : \n");
-            typeDeCase = 0; // Le joueur joue les cases paires
+            position.cellType = 0; // Le joueur joue les cases paires
             do {
                 scanf_s("%d", &cell);
                 cell--;
@@ -86,7 +85,7 @@ int main() {
         takeSeeds(ptr, cell, seeds);
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
-        if (isOpponentStarved(position, typeDeCase)) {
+        if (isOpponentStarved(position)) {
             // On ajoute les graines restantes au total du joueur qui vient de jouer le coup
             printf("Opponent is starved, taking all remaining seeds...\n");
             takeAllSeeds(ptr);

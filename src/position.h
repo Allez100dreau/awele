@@ -3,6 +3,7 @@ typedef struct {
     int nb_cells;
     int seeds_total;
     bool computer_play;
+    int cellType;
     int seeds_player;
     int seeds_computer;
     bool merged;
