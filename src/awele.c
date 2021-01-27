@@ -55,6 +55,8 @@ int main() {
         // S'il reste moins de 48 graines, on fusionne les cellules
         if (position.seeds_total < 48 && !position.merged) {
             merge(ptr);
+
+            printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
             
             computer_rand = 6;
             showBoard(position, turn);
@@ -83,6 +85,10 @@ int main() {
 
         // On regarde s'il y a une prise
         takeSeeds(ptr, cell, seeds);
+
+        int last_cell = (cell + seeds) % position.nb_cells;
+        printf("We reach cell %d\n\n", last_cell + 1);
+        printf("Computer's seeds : %d\nPlayer's seeds : %d\n\n", position.seeds_computer, position.seeds_player);
 
         // On regarde si le joueur qui n'était pas en train de jouer est affamé suite au coup
         if (isOpponentStarved(position)) {

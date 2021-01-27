@@ -21,7 +21,6 @@ void takeSeeds(Position* position, int cell, int seeds) {
     int nb_cells = position->nb_cells;
     // La cellule sur laquelle on atterrit
     int last_cell = (cell + seeds) % nb_cells;
-    printf("We reach cell %d\n\n", last_cell + 1);
     while (position->board[last_cell] == 2 || position->board[last_cell] == 3) {
         if (position->computer_play) {
             position->seeds_computer += position->board[last_cell];
@@ -37,7 +36,6 @@ void takeSeeds(Position* position, int cell, int seeds) {
         }
         last_cell--;
     }
-    printf("Computer's seeds : %d\nPlayer's seeds : %d\n\n", position->seeds_computer, position->seeds_player);
 }
 
 void merge(Position* position) {
@@ -50,8 +48,6 @@ void merge(Position* position) {
     }
     position->merged = true;
     position->nb_cells = 12;
-
-    printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
 }
 
 bool isOpponentStarved(Position position) {
