@@ -25,17 +25,17 @@ int main() {
     // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
     // Quand on est à false, l'ordi joue en 2nd et doit jouer pair
     
-    /*
     Position position = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-                   24, 96, false, 0, 0, false };  
-    */
+                   24, 96, false, 1, 0, 0, false };  
 
     // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
     
+    /*
     Position position = { {0, 4, 0, 4, 0, 4, 0, 4, 0, 4, 0, 4,
                    0, 4, 0, 4, 0, 4, 0, 4, 0, 1, 1, 4},
-                   24, 96, false, 0, 0, false };
+                   24, 96, false, 1, 0, 0, false };
+    */
 
     // On récupère un pointeur pour la position
     Position* ptr = &position;
