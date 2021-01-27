@@ -14,8 +14,6 @@ int minimax(Position position, int depth, bool maximizingPlayer) {
 		return maxEval;
 	}
 
-	int eval;
-
 	else {
 		int minEval = 96;
 		// Pour chaque fils de la position
@@ -29,7 +27,7 @@ int evaluation(Position* position) {
 	return position.seeds_computer - position.seeds_player;
 }
 
-void playMove(Position* nextPosition, Position position, int cell) {
+Position playMove(Position position, int cell) {
     int seeds;
 
     // On récupère le nombre de graines à la case choisie et on egrène
@@ -49,5 +47,5 @@ void playMove(Position* nextPosition, Position position, int cell) {
 		merge(&position);
 	}
 
-
+	return position;
 }
