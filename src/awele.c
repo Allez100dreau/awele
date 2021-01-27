@@ -17,28 +17,6 @@ void showBoard(Position position, int turn) {
     printf("\n\n");
 }
 
-int findBestMove(Position position) {
-    int values[12];
-
-    for (int i = 0; i < 12; i++) {
-        values[i] = minimax(position, 3);
-    }
-
-    int bestScore = -96;
-    int bestIndex;
-
-    for (int i = 0; i < 12; i++) {
-        if (values[i] > bestScore) {
-            bestScore = values[i];
-            bestIndex = i;
-        }
-    }
-
-    int cell = bestIndex * 2;
-
-    return cell;
-}
-
 int main() {
 
     srand(time(NULL));
@@ -91,7 +69,9 @@ int main() {
             /*do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);*/
 
-            cell = findBestMove(position);
+            minimax(position, 5, &cell);
+
+            cell *= 2;
 
             printf("Computer plays cell %d\n", cell + 1);
         }

@@ -42,7 +42,9 @@ void merge(Position* position) {
     int sum_seeds = 0;
     int merged_cell = 0;
     for (int i = 1; i < 24; i += 2) {
-        sum_seeds = position->board[i] + position->board[i - 1];
+        sum_seeds = position->board[i] + position->board[i-1];
+        position->board[i] = 0;
+        position->board[i-1] = 0;
         position->board[merged_cell] = sum_seeds;
         merged_cell++;
     }

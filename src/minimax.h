@@ -1,1 +1,1 @@
-int minimax(Position position, int depth);
+int minimax(Position position, int depth, int* bestCell);

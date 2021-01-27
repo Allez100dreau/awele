@@ -25,6 +25,10 @@ Position playMove(Position position, int cell) {
 	return position;
 }
 
+int evaluation(Position position) {
+	return position.seeds_computer - position.seeds_player;
+}
+
 int max(a, b) {
 	if (a > b) {
 		return a;
@@ -43,7 +47,7 @@ int min(a, b) {
 	}
 }
 
-int minimax(Position position, int depth) {
+int minimax(Position position, int depth, int* bestCell) {
 	if (depth == 0 || gameOver(position)) {
 		return evaluation(position);
 	}
@@ -63,7 +67,7 @@ int minimax(Position position, int depth) {
 
 		if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
 			nextPosition = playMove(position, cell);
-			values[i] = minimax(nextPosition, depth - 1);
+			values[i] = minimax(nextPosition, depth - 1, bestCell);
 		}
 		// Si le coup n'est pas valide, la valeur est la plus petite possible pour l'ordinateur, sinon la plus grande
 		else {
@@ -80,7 +84,10 @@ int minimax(Position position, int depth) {
 		int maxEval = -96;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
-			maxEval = max(maxEval, values[i]);
+			if (values[i] > maxEval) {
+				maxEval = values[i];
+				*bestCell = i;
+			}
 		}
 		return maxEval;
 	}
@@ -93,8 +100,4 @@ int minimax(Position position, int depth) {
 		}
 		return minEval;
 	}
-}
-
-int evaluation(Position position) {
-	return position.seeds_computer - position.seeds_player;
 }
