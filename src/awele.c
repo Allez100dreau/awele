@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <limits.h>
 #include "position.h"
 #include "functions.h"
 
@@ -69,7 +70,7 @@ int main() {
             /*do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);*/
 
-            minimax(position, 5, &cell);
+            minimax(position, 6, INT_MIN, INT_MAX, &cell);
 
             cell *= 2;
 
@@ -80,10 +81,13 @@ int main() {
             // Joue uniquement les cases paires
             printf("Choose an even cell : \n");
             position.cellType = 0; // Le joueur joue les cases paires
-            do {
+            /*do {
                 scanf_s("%d", &cell);
                 cell--;
-            } while (position.board[cell] == 0 || (cell % 2 == 0) || cell > position.nb_cells || cell < 1);
+            } while (position.board[cell] == 0 || (cell % 2 == 0) || cell > position.nb_cells || cell < 1);*/
+
+            do cell = rand() % computer_rand * 2 + 1;
+            while (position.board[cell] == 0);
         }
 
         // On egrène on on récupère le nombre de graines à la case choisie

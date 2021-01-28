@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <limits.h>
 #include "position.h"
 #include "functions.h"
 
@@ -47,7 +48,7 @@ int min(a, b) {
 	}
 }
 
-int minimax(Position position, int depth, int* bestCell) {
+int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
 	if (depth == 0 || gameOver(position)) {
 		return evaluation(position);
 	}
@@ -67,36 +68,47 @@ int minimax(Position position, int depth, int* bestCell) {
 
 		if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
 			nextPosition = playMove(position, cell);
-			values[i] = minimax(nextPosition, depth - 1, bestCell);
+			values[i] = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
 		}
 		// Si le coup n'est pas valide, la valeur est la plus petite possible pour l'ordinateur, sinon la plus grande
 		else {
 			if (position.computer_play) {
-				values[i] = -96;
+				values[i] = INT_MIN;
 			}
 			else {
-				values[i] = 96;
+				values[i] = INT_MAX;
 			}
 		}
 	}
 
 	if (position.computer_play) {
-		int maxEval = -96;
+		int maxEval = INT_MIN;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
 			if (values[i] > maxEval) {
 				maxEval = values[i];
 				*bestCell = i;
+			
+			alpha = max(alpha, values[i]);
+			if (beta <= alpha) {
+				printf("Pruning occured !\n");
+				break;
+			}
 			}
 		}
 		return maxEval;
 	}
 
 	else {
-		int minEval = 96;
+		int minEval = INT_MAX;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
 			minEval = min(minEval, values[i]);
+			beta = min(beta, values[i]);
+			if (beta <= alpha) {
+				printf("Pruning occured !\n");
+				break;
+			}
 		}
 		return minEval;
 	}
