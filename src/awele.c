@@ -22,7 +22,7 @@ int main() {
 
     srand(time(NULL));
 
-    double meanTime = 0;
+    double maxTime = -0.10;
 
     // Paramètres pour le concours
 
@@ -62,14 +62,14 @@ int main() {
     int depth;
 
     printf("Minimax depth : ");
-    scanf_s("%d", &depth);
+    scanf("%d", &depth);
 
     // Boucle de jeu
     while (!gameOver(position)) {
         showBoard(position, turn);
 
         // S'il reste moins de 48 graines, on fusionne les cellules
-        if (position.seeds_total < 48 && !position.merged) {
+        if (position.seeds_total <= 48 && !position.merged) {
             merge(ptr);
 
             printf("### BOARD CELLS HAVE BEEN MERGED ###\n");
@@ -88,28 +88,29 @@ int main() {
             beta = INT_MAX;
 
             clock_t begin = clock();
-            minimax(position, depth, &alpha, &beta, &cell);
+            minimax(position, depth, alpha, beta, &cell);
             clock_t end = clock();
 
-            if (!position.merged) {
-                meanTime += (double)(end - begin) / CLOCKS_PER_SEC;
-            }
+
+
+            if ((double)(end - begin) / CLOCKS_PER_SEC > maxTime)
+                maxTime = (double)(end - begin) / CLOCKS_PER_SEC;
 
             cell *= 2;
             cell += !wePlayOddCells;
 
-            printf("Computer plays cell %d\n", cell + 1);
+            printf("Computer plays cell ### %d ###\n", cell + 1);
         }
 
         else {
             position.cellType = !wePlayOddCells;
-            /*do {
-                scanf_s("%d", &cell);
+            do {
+                scanf("%d", &cell);
                 cell--;
-            } while (position.board[cell] == 0 || (cell % 2 == 0) || cell > position.nb_cells || cell < 1);*/
+            } while (position.board[cell] == 0 || cell > position.nb_cells || cell < 1);
 
-            do cell = rand() % computer_rand * 2 + wePlayOddCells;
-            while (position.board[cell] == 0);
+            /*do cell = rand() % computer_rand * 2 + wePlayOddCells;
+            while (position.board[cell] == 0);*/
 
             printf("Player plays cell %d\n", cell + 1);
         }
@@ -137,7 +138,7 @@ int main() {
     }
     printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
 
-    printf("Mean time per minimax : %lf", meanTime / (turn / 2));
+    printf("Max time per minimax : %lf", maxTime);
 
     return 0;
 }

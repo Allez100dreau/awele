@@ -51,7 +51,7 @@ int min(a, b) {
 	}
 }
 
-int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) {
+int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
 	if (gameOver(position)) {
 		if (position.seeds_computer > position.seeds_player) {
 			return INT_MAX;
@@ -66,45 +66,27 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 	}
 
 	Position nextPosition;
-	int values[12];
 	int cell;
-
-	// On récupère l'évaluation de toutes les positions possibles à partir de la position courante
-	for (int i = 0; i < 12; i++) {
-		if (position.computer_play) {
-			cell = i * 2 + !position.cellType;
-		}
-		else {
-			cell = i * 2 + position.cellType;
-		}
-
-		if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
-			nextPosition = playMove(position, cell);
-			values[i] = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
-		}
-		// Si le coup n'est pas valide, la valeur est la plus petite possible pour l'ordinateur, sinon la plus grande
-		else {
-			if (position.computer_play) {
-				values[i] = INT_MIN;
-			}
-			else {
-				values[i] = INT_MAX;
-			}
-		}
-	}
+	int eval;
 
 	if (position.computer_play) {
 		int maxEval = INT_MIN;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
-			if (values[i] > maxEval) {
-				maxEval = values[i];
-				*bestCell = i;
-			
-			*alpha = max(*alpha, values[i]);
-			if (*beta <= *alpha) {
-				break;
+			cell = i * 2 + !position.cellType;
+
+			if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
+				nextPosition = playMove(position, cell);
+				eval = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
+				if (eval > maxEval) {
+					maxEval = eval;
+					*bestCell = i;
+				}
 			}
+
+			alpha = max(alpha, eval);
+			if (beta <= alpha) {
+				break;
 			}
 		}
 		return maxEval;
@@ -114,9 +96,16 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 		int minEval = INT_MAX;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
-			minEval = min(minEval, values[i]);
-			*beta = min(*beta, values[i]);
-			if (*beta <= *alpha) {
+			cell = i * 2 + position.cellType;
+
+			if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
+				nextPosition = playMove(position, cell);
+				eval = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
+				minEval = min(minEval, eval);
+			}
+
+			beta = min(beta, eval);
+			if (beta <= alpha) {
 				break;
 			}
 		}
