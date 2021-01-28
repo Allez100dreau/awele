@@ -85,7 +85,8 @@ int main() {
 
             minimax(position, depth, &alpha, &beta, &cell);
 
-            cell *= 2 + !wePlayOddCells;
+            cell *= 2;
+            cell += !wePlayOddCells;
 
             printf("Computer plays cell %d\n", cell + 1);
         }
