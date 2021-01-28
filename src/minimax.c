@@ -103,7 +103,6 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 			
 			*alpha = max(*alpha, values[i]);
 			if (*beta <= *alpha) {
-				printf("PRUNING HAS OCCURED\n");
 				break;
 			}
 			}
@@ -118,7 +117,6 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 			minEval = min(minEval, values[i]);
 			*beta = min(*beta, values[i]);
 			if (*beta <= *alpha) {
-				printf("PRUNING HAS OCCURED\n");
 				break;
 			}
 		}
