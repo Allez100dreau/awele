@@ -24,6 +24,7 @@ Position playMove(Position position, int cell) {
 	}
 
 	position.computer_play = !position.computer_play;
+	position.cellType = !position.cellType;
 
 	return position;
 }
@@ -51,8 +52,16 @@ int min(a, b) {
 }
 
 int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) {
+	if (gameOver(position)) {
+		if (position.seeds_computer > position.seeds_player) {
+			return INT_MAX;
+		}
+		else {
+			return INT_MIN;
+		}
+	}
 
-	if (depth == 0 || gameOver(position)) {
+	if (depth == 0) {
 		return evaluation(position);
 	}
 
@@ -63,10 +72,10 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 	// On récupère l'évaluation de toutes les positions possibles à partir de la position courante
 	for (int i = 0; i < 12; i++) {
 		if (position.computer_play) {
-			cell = i * 2; // Si c'est à l'ordinateur de jouer, on joue les cases impaires (indices pairs), donc 0 <= i <= 22
+			cell = i * 2 + !position.cellType;
 		}
 		else {
-			cell = i * 2 + 1; // Autrement, on joue les cases paires (indices impairs)
+			cell = i * 2 + position.cellType;
 		}
 
 		if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
@@ -94,6 +103,7 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 			
 			*alpha = max(*alpha, values[i]);
 			if (*beta <= *alpha) {
+				printf("PRUNING HAS OCCURED\n");
 				break;
 			}
 			}
@@ -108,6 +118,7 @@ int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) 
 			minEval = min(minEval, values[i]);
 			*beta = min(*beta, values[i]);
 			if (*beta <= *alpha) {
+				printf("PRUNING HAS OCCURED\n");
 				break;
 			}
 		}

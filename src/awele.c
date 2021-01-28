@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <time.h>
 #include <limits.h>
+#include <time.h>
 #include "position.h"
 #include "functions.h"
 
@@ -22,10 +22,12 @@ int main() {
 
     srand(time(NULL));
 
+    double meanTime = 0;
+
     // Paramètres pour le concours
 
-    bool weStart = false;
-    bool wePlayOddCells = true;
+    bool weStart = true;
+    bool wePlayOddCells = weStart;
 
     // Position initiale du jeu
     // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
@@ -57,7 +59,10 @@ int main() {
     // Pour l'égalage alpha-beta
     int alpha;
     int beta;
-    int depth = 3;
+    int depth;
+
+    printf("Minimax depth : ");
+    scanf_s("%d", &depth);
 
     // Boucle de jeu
     while (!gameOver(position)) {
@@ -74,8 +79,7 @@ int main() {
         }
 
         if (position.computer_play) {
-            // Joue uniquement les cases impaires
-            position.cellType = wePlayOddCells; // L'ordinateur joue les cases impaires
+            position.cellType = wePlayOddCells;
 
             /*do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);*/
@@ -83,7 +87,13 @@ int main() {
             alpha = INT_MIN;
             beta = INT_MAX;
 
+            clock_t begin = clock();
             minimax(position, depth, &alpha, &beta, &cell);
+            clock_t end = clock();
+
+            if (!position.merged) {
+                meanTime += (double)(end - begin) / CLOCKS_PER_SEC;
+            }
 
             cell *= 2;
             cell += !wePlayOddCells;
@@ -92,9 +102,7 @@ int main() {
         }
 
         else {
-            // Joue uniquement les cases paires
-            printf("Choose an even cell : \n");
-            position.cellType = !wePlayOddCells; // Le joueur joue les cases paires
+            position.cellType = !wePlayOddCells;
             /*do {
                 scanf_s("%d", &cell);
                 cell--;
@@ -102,6 +110,8 @@ int main() {
 
             do cell = rand() % computer_rand * 2 + wePlayOddCells;
             while (position.board[cell] == 0);
+
+            printf("Player plays cell %d\n", cell + 1);
         }
 
         // On egrène on on récupère le nombre de graines à la case choisie
@@ -126,6 +136,8 @@ int main() {
         position.computer_play = !position.computer_play;
     }
     printf("Game is over, players' number of seeds : \nComputer's seeds : %d\nPlayer's seeds : %d\n", ptr->seeds_computer, ptr->seeds_player);
+
+    printf("Mean time per minimax : %lf", meanTime / (turn / 2));
 
     return 0;
 }
