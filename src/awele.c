@@ -22,13 +22,18 @@ int main() {
 
     srand(time(NULL));
 
+    // Paramètres pour le concours
+
+    bool weStart = false;
+    bool wePlayOddCells = true;
+
     // Position initiale du jeu
     // Mettre à true pour faire commencer l'ordi en 1er, aussi dans cette configuration il devra forcément jouer impair
     // Quand on est à false, l'ordi joue en 2nd et doit jouer pair
     
     Position position = { {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
                    4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4},
-                   24, 96, false, 1, 0, 0, false };  
+                   24, 96, weStart, wePlayOddCells, 0, 0, false };  
 
     // Configuration pour tester si le joueur est affamé, il faut jouer 22 et l'ordi est affamé ensuite
     
@@ -52,6 +57,7 @@ int main() {
     // Pour l'égalage alpha-beta
     int alpha;
     int beta;
+    int depth = 3;
 
     // Boucle de jeu
     while (!gameOver(position)) {
@@ -69,7 +75,7 @@ int main() {
 
         if (position.computer_play) {
             // Joue uniquement les cases impaires
-            position.cellType = 1; // L'ordinateur joue les cases impaires
+            position.cellType = wePlayOddCells; // L'ordinateur joue les cases impaires
 
             /*do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);*/
@@ -77,9 +83,9 @@ int main() {
             alpha = INT_MIN;
             beta = INT_MAX;
 
-            minimax(position, 7, &alpha, &beta, &cell);
+            minimax(position, depth, &alpha, &beta, &cell);
 
-            cell *= 2;
+            cell *= 2 + !wePlayOddCells;
 
             printf("Computer plays cell %d\n", cell + 1);
         }
@@ -87,13 +93,13 @@ int main() {
         else {
             // Joue uniquement les cases paires
             printf("Choose an even cell : \n");
-            position.cellType = 0; // Le joueur joue les cases paires
+            position.cellType = !wePlayOddCells; // Le joueur joue les cases paires
             /*do {
                 scanf_s("%d", &cell);
                 cell--;
             } while (position.board[cell] == 0 || (cell % 2 == 0) || cell > position.nb_cells || cell < 1);*/
 
-            do cell = rand() % computer_rand * 2 + 1;
+            do cell = rand() % computer_rand * 2 + wePlayOddCells;
             while (position.board[cell] == 0);
         }
 
