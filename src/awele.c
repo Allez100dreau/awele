@@ -49,6 +49,10 @@ int main() {
     int seeds;
     int computer_rand = 12;
 
+    // Pour l'égalage alpha-beta
+    int alpha;
+    int beta;
+
     // Boucle de jeu
     while (!gameOver(position)) {
         showBoard(position, turn);
@@ -70,7 +74,10 @@ int main() {
             /*do cell = rand() % computer_rand * 2;
             while (position.board[cell] == 0);*/
 
-            minimax(position, 6, INT_MIN, INT_MAX, &cell);
+            alpha = INT_MIN;
+            beta = INT_MAX;
+
+            minimax(position, 7, &alpha, &beta, &cell);
 
             cell *= 2;
 

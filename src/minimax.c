@@ -23,6 +23,8 @@ Position playMove(Position position, int cell) {
 		merge(&position);
 	}
 
+	position.computer_play = !position.computer_play;
+
 	return position;
 }
 
@@ -48,7 +50,8 @@ int min(a, b) {
 	}
 }
 
-int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
+int minimax(Position position, int depth, int* alpha, int* beta, int* bestCell) {
+
 	if (depth == 0 || gameOver(position)) {
 		return evaluation(position);
 	}
@@ -89,9 +92,8 @@ int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
 				maxEval = values[i];
 				*bestCell = i;
 			
-			alpha = max(alpha, values[i]);
-			if (beta <= alpha) {
-				printf("Pruning occured !\n");
+			*alpha = max(*alpha, values[i]);
+			if (*beta <= *alpha) {
 				break;
 			}
 			}
@@ -104,9 +106,8 @@ int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
 			minEval = min(minEval, values[i]);
-			beta = min(beta, values[i]);
-			if (beta <= alpha) {
-				printf("Pruning occured !\n");
+			*beta = min(*beta, values[i]);
+			if (*beta <= *alpha) {
 				break;
 			}
 		}
