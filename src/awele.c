@@ -114,13 +114,13 @@ int main() {
         else {
             position.cellType = !wePlayOddCells;
 
-            /*do {
+            do {
                 scanf("%d", &cell);
                 cell--;
-            } while (position.board[cell] == 0 || cell > position.nb_cells || cell < 1);*/
+            } while (position.board[cell] == 0 || cell > position.nb_cells || cell + 1 < 1);
 
-            do cell = rand() % computer_rand * 2 + wePlayOddCells;
-            while (position.board[cell] <= 0);
+            /*do cell = rand() % computer_rand * 2 + wePlayOddCells;
+            while (position.board[cell] <= 0);*/
 
             printf("Player plays cell %d\n", cell + 1);
         }
