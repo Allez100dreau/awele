@@ -19,7 +19,7 @@ Position playMove(Position position, int cell) {
 	}
 
 	// S'il reste moins de 48 graines, on fusionne les cellules
-	if (position.seeds_total < 48 && !position.merged) {
+	if (position.seeds_total <= 48 && !position.merged) {
 		merge(&position);
 	}
 
@@ -29,8 +29,10 @@ Position playMove(Position position, int cell) {
 	return position;
 }
 
-int evaluation(Position position) {
-	return position.seeds_computer - position.seeds_player;
+CellScore evaluation(Position position) {
+	CellScore pair;
+	pair.score = position.seeds_computer - position.seeds_player;
+	return pair;
 }
 
 int max(a, b) {
@@ -51,45 +53,42 @@ int min(a, b) {
 	}
 }
 
-int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
-	if (gameOver(position)) {
-		if (position.seeds_computer > position.seeds_player) {
-			return INT_MAX;
-		}
-		else {
-			return INT_MIN;
-		}
-	}
+CellScore minimax(Position position, int depth, int alpha, int beta) {
+	CellScore bestPair;
 
-	if (depth == 0) {
+	if (depth == 0 || gameOver(position)) {
 		return evaluation(position);
 	}
 
 	Position nextPosition;
 	int cell;
 	int eval;
+	int Alpha = alpha;
+	int Beta = beta;
 
 	if (position.computer_play) {
 		int maxEval = INT_MIN;
 		// Pour chaque fils de la position
 		for (int i = 0; i < 12; i++) {
 			cell = i * 2 + !position.cellType;
-
-			if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
+			if (position.board[cell] > 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
 				nextPosition = playMove(position, cell);
-				eval = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
+				eval = minimax(nextPosition, depth - 1, Alpha, Beta).score;
 				if (eval > maxEval) {
 					maxEval = eval;
-					*bestCell = i;
+					bestPair.cell = cell;
+					Alpha = max(Alpha, eval);
+					if (Beta <= Alpha) {
+						break;
+					}
 				}
 			}
 
-			alpha = max(alpha, eval);
-			if (beta <= alpha) {
-				break;
-			}
+			
 		}
-		return maxEval;
+
+		bestPair.score = maxEval;
+		return bestPair;
 	}
 
 	else {
@@ -98,17 +97,19 @@ int minimax(Position position, int depth, int alpha, int beta, int* bestCell) {
 		for (int i = 0; i < 12; i++) {
 			cell = i * 2 + position.cellType;
 
-			if (position.board[cell] != 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
+			if (position.board[cell] > 0) { // Si la cellule n'est pas vide, i.e. le coup est valide
 				nextPosition = playMove(position, cell);
-				eval = minimax(nextPosition, depth - 1, alpha, beta, bestCell);
+				eval = minimax(nextPosition, depth - 1, Alpha, Beta).score;
 				minEval = min(minEval, eval);
+				Beta = min(Beta, eval);
+				if (Beta <= Alpha) {
+					break;
+				}
 			}
 
-			beta = min(beta, eval);
-			if (beta <= alpha) {
-				break;
-			}
+			
 		}
-		return minEval;
+		bestPair.score = minEval;
+		return bestPair;
 	}
 }

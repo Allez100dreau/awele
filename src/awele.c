@@ -5,6 +5,7 @@
 #include <time.h>
 #include "position.h"
 #include "functions.h"
+#include "minimax.h"
 
 void showBoard(Position position, int turn) {
     printf("### TURN %d ###\n", turn);
@@ -52,6 +53,7 @@ int main() {
     int turn = 1;
 
     // Utilisées pour la boucle de jeu
+    CellScore pair;
     int cell;
     int seeds;
     int computer_rand = 12;
@@ -88,7 +90,10 @@ int main() {
             beta = INT_MAX;
 
             clock_t begin = clock();
-            minimax(position, depth, alpha, beta, &cell);
+            pair = minimax(position, depth, alpha, beta);
+            cell = pair.cell;
+            /*do cell = (cell + 1) % position.nb_cells;
+            while (position.board[cell] <= 0);*/
             clock_t end = clock();
 
 
@@ -96,21 +101,24 @@ int main() {
             if ((double)(end - begin) / CLOCKS_PER_SEC > maxTime)
                 maxTime = (double)(end - begin) / CLOCKS_PER_SEC;
 
-            cell *= 2;
-            cell += !wePlayOddCells;
-
             printf("Computer plays cell ### %d ###\n", cell + 1);
+
+            if (position.board[cell] <= 0) {
+                printf("MOVE NOT LEGAL\n");
+                return 1;
+            }
         }
 
         else {
             position.cellType = !wePlayOddCells;
-            do {
+
+            /*do {
                 scanf("%d", &cell);
                 cell--;
-            } while (position.board[cell] == 0 || cell > position.nb_cells || cell < 1);
+            } while (position.board[cell] == 0 || cell > position.nb_cells || cell < 1);*/
 
-            /*do cell = rand() % computer_rand * 2 + wePlayOddCells;
-            while (position.board[cell] == 0);*/
+            do cell = rand() % computer_rand * 2 + wePlayOddCells;
+            while (position.board[cell] <= 0);
 
             printf("Player plays cell %d\n", cell + 1);
         }

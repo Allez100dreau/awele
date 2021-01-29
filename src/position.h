@@ -1,4 +1,9 @@
 typedef struct {
+    int cell;
+    int score;
+}CellScore;
+
+typedef struct {
     int board[24];
     int nb_cells;
     int seeds_total;

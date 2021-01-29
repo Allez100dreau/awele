@@ -1,1 +1,1 @@
-int minimax(Position position, int depth, int alpha, int beta, int* bestCell);
+CellScore minimax(Position position, int depth, int alpha, int beta);
