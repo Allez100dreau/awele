@@ -27,7 +27,9 @@ int main() {
 
     // Paramètres pour le concours
 
-    bool weStart = true;
+    int weStart;
+    printf("Are we going first? 1 for yes, 0 for no : ");
+    scanf("%d", &weStart);
     bool wePlayOddCells = weStart;
 
     // Position initiale du jeu

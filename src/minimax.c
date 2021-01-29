@@ -86,7 +86,6 @@ CellScore minimax(Position position, int depth, int alpha, int beta) {
 
 			
 		}
-
 		bestPair.score = maxEval;
 		return bestPair;
 	}
